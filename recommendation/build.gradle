@@ -1,0 +1,55 @@
+buildscript {
+    ext {
+        springBootVersion = '1.2.5.RELEASE'
+    }
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+    }
+}
+
+apply plugin: 'java'
+apply plugin: 'idea'
+apply plugin: 'spring-boot'
+apply plugin: 'maven-publish'
+
+jar {
+    baseName = 'recommendation-service'
+    version = '1.0.0-SNAPSHOT'
+}
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+
+dependencies {
+    compile("org.springframework.boot:spring-boot-starter-web:${springBootVersion}") {
+        exclude module: 'spring-boot-starter-tomcat'
+    }
+    compile("org.springframework.boot:spring-boot-starter-jetty:${springBootVersion}")
+    compile("org.springframework.boot:spring-boot-starter-actuator:${springBootVersion}")
+    compile("org.springframework.cloud:spring-cloud-starter-eureka:1.0.3.RELEASE")
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '2.5'
+}
+
+// $ gradle publishToMavenLocal
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            groupId 'org.xstream.microexperiment.core.recommendation'
+            artifactId 'recommendation-service'
+            version '1.0.0-SNAPSHOT'
+
+            from components.java
+        }
+    }
+}
