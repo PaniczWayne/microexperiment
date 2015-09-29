@@ -14,8 +14,8 @@ zuul:
   routes:
     productcomposite:
       path: /productcomposite/**
-    recommendation:
-      path: /recommendation/**
+#    recommendation:
+#      path: /recommendation/**
 #      stripPrefix: false
 
 server:

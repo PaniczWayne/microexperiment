@@ -6,6 +6,9 @@ spring:
     name: eureka
 
 eureka:
+  instance:
+    leaseExpirationDurationInSeconds: 5
+    leaseRenewalIntervalInSeconds: 3
   client:
     registerWithEureka: false
     fetchRegistry: false

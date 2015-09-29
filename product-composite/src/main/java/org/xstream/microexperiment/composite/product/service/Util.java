@@ -27,16 +27,16 @@ public class Util {
      */
     public URI getServiceUrl(String serviceId, String fallbackUri) {
         URI uri = null;
-        try {
+//        try {
             ServiceInstance instance = loadBalancer.choose(serviceId);
             uri = instance.getUri();
             LOG.debug("Resolved serviceId '{}' to URL '{}'.", serviceId, uri);
 
-        } catch (RuntimeException e) {
-            // Eureka not available, use fallback
-            uri = URI.create(fallbackUri);
-            LOG.warn("Failed to resolve serviceId '{}'. Fallback to URL '{}'.", serviceId, uri);
-        }
+//        } catch (RuntimeException e) {
+//            // Eureka not available, use fallback
+//            uri = URI.create(fallbackUri);
+//            LOG.warn("Failed to resolve serviceId '{}'. Fallback to URL '{}'.", serviceId, uri);
+//        }
 
         return uri;
     }

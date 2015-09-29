@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.ResourceAccessException;
 import org.xstream.microexperiment.composite.product.model.ProductAggregated;
 import org.xstream.microexperiment.product.model.Product;
 import org.xstream.microexperiment.review.model.Review;
@@ -52,20 +53,23 @@ public class ProductCompositeService {
             } else {
                 recommendations = recommendationResult.getBody();
             }
-        } catch (Throwable t) {
-            LOG.error("getProduct error ", t);
-            throw t;
+        } catch (RuntimeException t) {
+            LOG.error("getRecommendations error ", t);
         }
 
 
         // 3. Get optional reviews
-        ResponseEntity<List<Review>> reviewsResult = integration.getReviews(productId);
         List<Review> reviews = null;
-        if (!reviewsResult.getStatusCode().is2xxSuccessful()) {
-            // Something went wrong with getReviews, simply skip the review-information in the response
-            LOG.debug("Call to getReviews failed: {}", reviewsResult.getStatusCode());
-        } else {
-            reviews = reviewsResult.getBody();
+        try {
+            ResponseEntity<List<Review>> reviewsResult = integration.getReviews(productId);
+            if (!reviewsResult.getStatusCode().is2xxSuccessful()) {
+                // Something went wrong with getReviews, simply skip the review-information in the response
+                LOG.debug("Call to getReviews failed: {}", reviewsResult.getStatusCode());
+            } else {
+                reviews = reviewsResult.getBody();
+            }
+        } catch (RuntimeException t) {
+            LOG.error("getReview error ", t);
         }
 
         return util.createOkResponse(new ProductAggregated(productResult.getBody(), recommendations, reviews));
